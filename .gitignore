@@ -1,0 +1,32 @@
+# Node.js dependencies
+node_modules/
+
+# Ngrok files (if any)
+ngrok/
+ngrok.exe
+
+# Data files (if sensitive or temporary)
+data/
+
+
+# Environment variables (if you recreate .env later)
+.env
+
+# Log files
+*.log
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# VS Code or IDE config (optional)
+.vscode/
+.idea/
+
+# Backup/temporary files
+*.bak
+*.tmp
+
+# System files
+ehthumbs.db
+desktop.ini

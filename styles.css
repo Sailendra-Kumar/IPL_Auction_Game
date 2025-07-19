@@ -1,0 +1,471 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #1e5799 0%,#2989d8 50%,#207cca 51%,#7db9e8 100%);
+    color: #fff;
+    min-height: 100vh;
+}
+
+#game-container {
+    max-width: 2200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #ffcc00;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+#auction-status {
+    /* d */
+    width: 97%;
+    margin: 10px auto; /* Center the elements horizontally */
+    /* d */
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    min-height: 100px;
+    max-height: 100px;
+    overflow-y: auto;
+    font-size: larger;
+}
+
+#player-info {
+    display: flex;
+    justify-content: center; /* Center the content */
+    align-items: flex-start; /* Align items to the top */
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative; /* Allow positioning of child elements */
+    min-height: 400px; /* Increase the minimum height */
+}
+
+#player-image {
+    width: 250px !important; /* Increase the width */
+    height: 250px !important; /* Increase the height */
+    object-fit: cover !important;
+    /* border-radius: 10px !important; */
+    border-radius: 50% !important;
+    margin-right: 20px !important; /* Space between image and next element */
+    flex-shrink: 0 !important; /* Prevent the image from shrinking */
+    position: absolute !important; /* Position relative to parent */
+    left: calc(50% - 250px) !important; /* Move slightly to the left from center */
+    top: -5px !important; /* Move the image up */
+}
+
+#player-details {
+    width: 300px; /* Set a fixed width */
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+    border-radius: 10px;
+    margin-left: 530px; /* Adjust margin for new image size */
+}
+
+#player-details h2 {
+    margin: 0 0 20px 0; /* Increased bottom margin */
+    font-size: 24px; /* Increase the font size for h2 */
+}
+
+#player-details p {
+    margin: 0 0 20px 0 !important; /* Increased bottom margin */
+    font-size: 24px; /* Increase the font size for p */
+}
+
+#player-stats {
+    margin-top: 10px;
+}
+
+#player-stats table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 24px; /* Increase the font size */
+    text-align: left !important;
+}
+
+#player-stats th,
+#player-stats td {
+    border: 1px solid #ddd;
+    padding: 12px; /* Increase the padding */
+    text-align: left !important;
+}
+
+
+
+#bidding-area {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+#team-bids {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    
+}
+
+.team-bid {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 3px;
+    width: calc(20% - 50px);
+    font-size: 25px;
+    margin-bottom: 20px !important;
+}
+.team-bid input[type="number"] {
+    width: 150px; /* Increase the width of the text box */
+    height: 15px; /* Increase the height of the text box */
+    font-size: 16px; /* Increase the font size for better readability */
+    padding: 5px; /* Add padding for better spacing */
+    margin: 5px 0; /* Add margin for spacing around the element */
+    
+}
+.team-bid select {
+    width: 80px; /* Increase the width */
+    height: 30px; /* Increase the height */
+    font-size: 16px; /* Increase the font size for better readability */
+    font-weight: bold;
+    padding: 5px; /* Add padding for better spacing */
+    margin: 5px 0; /* Add margin for spacing around the element */
+    background-color: #ffcc00;
+    color: #000;
+    border-radius: 5px;
+    
+}
+
+button {
+    background-color: #ffcc00;
+    color: #000;
+    border: none;
+    padding: 10px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    font-size: 20px;
+}
+
+button:hover {
+    background-color: #ffd633;
+}
+
+#team-info {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.team-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.team-logo {
+    width: 80px; /* Set the size of the logo */
+    height: 80px; /* Set the size of the logo */
+    object-fit: scale-down;
+    border-radius: 28%;
+    background-color: #ffffff7f;
+    padding: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    margin-right: 20px;
+    
+}
+
+.team-header h3 {
+    font-size: 2rem;
+    margin-right: 10px; /* Prevent overlap with the button */
+}
+
+.info-button {
+    background-color: #ffd633;
+    color: black;
+    border: none;
+    padding: 5px 15px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.info-button:hover {
+    background-color: #ffd633;
+}
+
+.team-card.foreign-limit-reached {
+    border: 2px solid red;
+    background-color: #ffe6e6;
+}
+
+.team-card.foreign-limit-reached .info-button {
+    background-color: #ccc;  /* Change the button color to gray */
+    cursor: not-allowed;  /* Change the cursor to show it's not fully interactive */
+}
+
+.team-card.foreign-limit-reached .info-button:hover {
+    background-color: #ccc;  /* Keep button color the same when hovered */
+    cursor: not-allowed;  /* Keep cursor as "not allowed" */
+}
+
+.team-card {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 20px;
+    width: calc(20% - 50px);
+    font-size: 25px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 5px;
+    text-align: left;
+}
+
+th {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Add these styles to your existing CSS */
+
+/* Container to take full screen width with padding */
+#results-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.15); /* Slightly lighter background */
+    border-radius: 12px; /* Slightly rounder corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+/* Team card styling with spacious padding */
+#results-container .team-card {
+    background-color: rgba(255, 255, 255, 0.15); /* Transparent white background */
+    border-radius: 12px;
+    padding: 20px; /* Reduced padding to fit more cards */
+    margin-bottom: 30px; /* More space between cards */
+    width: calc(33.33% - 20px); /* Adjust width for 3 cards per row */
+    height: auto; /* Auto height to accommodate content */
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover effect for team card */
+#results-container .team-card:hover {
+    transform: translateY(-5px); /* Slight hover effect */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+}
+
+/* Team header styling */
+#results-container .team-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+/* Team logo styling */
+#results-container .team-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Logo shadow */
+    margin-right: 15px;
+}
+
+/* Team name styling */
+#results-container h3 {
+    font-size: 1.5rem;
+    color: #ffcc00;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Text shadow for contrast */
+}
+
+/* Table styling */
+#results-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+/* Table cells styling */
+#results-container th, #results-container td {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 12px 20px;
+    text-align: left;
+    font-size: 1rem;
+}
+
+/* Table header styling */
+#results-container th {
+    background-color: rgba(255, 255, 255, 0.1);
+    font-weight: bold;
+    color: #ffcc00;
+}
+
+/* Table body cells styling */
+#results-container td {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Media queries for responsive design */
+@media (max-width: 1200px) {
+    #results-container .team-card {
+        width: calc(50% - 20px); /* 2 cards per row for medium screens */
+    }
+}
+
+@media (max-width: 800px) {
+    #results-container .team-card {
+        width: calc(100% - 20px); /* 1 card per row for smaller screens */
+    }
+}
+
+#player-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#player-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 20px;
+}
+
+#player-details {
+    text-align: center;
+}
+
+#player-details table {
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+#player-details th, #player-details td {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 5px 10px;
+}
+
+#player-details th {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/*  *added ones*/
+#player-details table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+#player-details th, #player-details td {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 8px;
+    text-align: center;
+}
+
+#player-details th {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Heading */
+.auction-results-heading {
+    text-align: center;
+    color: #ffcc00;
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 8px rgba(255, 204, 0, 0.7);
+}
+
+/* Wrapper for all results */
+.auction-results-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Team Card */
+.auction-team-card {
+    background: linear-gradient(135deg, #1e5799 0%,#2989d8 50%,#207cca 51%,#7db9e8 100%);
+    border-radius: 12px;
+    padding: 15px;
+    width: 340px;
+    box-shadow: 0 4px 10px transparent;
+    animation: auctionFadeIn 0.5s ease-in-out;
+}
+
+/* Team Header */
+.auction-team-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 8px;
+    color: white;
+    font-size: 18px;
+}
+
+.auction-team-logo {
+    width: 40px;
+    height: 40px;
+}
+
+.auction-balance {
+    font-size: 14px;
+    color: #ffcc00;
+}
+
+/* Table */
+.auction-team-table {
+    width: 80%;
+    border-collapse: collapse;
+    margin-top: 10px;
+
+}
+
+.auction-team-table th, .auction-team-table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid transparent;
+}
+
+.team-res-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    flex-direction: column; /* Stack logo and text */
+    gap: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    transition: transform 0.2s ease-in-out;
+}
+
+.team-res-btn:hover {
+    transform: scale(1.05);
+}
+
+

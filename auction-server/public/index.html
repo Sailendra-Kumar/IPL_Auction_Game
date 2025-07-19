@@ -1,0 +1,1416 @@
+<!-- <!DOCTYPE html>
+   <html lang="en">
+   <head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>IPL Auction Teams</title>
+       <style>
+           body {
+               font-family: Arial, sans-serif;
+               margin: 0;
+               padding: 20px;
+               background: linear-gradient(135deg, #1e5799 0%, #2989d8 50%, #207cca 51%, #7db9e8 100%);
+               color: #fff;
+               min-height: 100vh;
+           }
+           h2 {
+               text-align: center;
+               color: #ffcc00;
+               text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+           }
+           .team-selection {
+               display: flex;
+               flex-wrap: wrap;
+               justify-content: center;
+               gap: 20px;
+           }
+           .team-card {
+               background-color: rgba(255, 255, 255, 0.1);
+               border-radius: 10px;
+               padding: 15px;
+               width: 120px;
+               text-align: center;
+               cursor: pointer;
+               transition: transform 0.2s;
+           }
+           .team-card:hover {
+               transform: scale(1.05);
+           }
+           .team-logo {
+               width: 80px;
+               height: 80px;
+               object-fit: scale-down;
+               border-radius: 28%;
+               background-color: #ffffff7f;
+               padding: 10px;
+           }
+           .team-details {
+               display: none;
+               background-color: rgba(255, 255, 255, 0.1);
+               border-radius: 10px;
+               padding: 15px;
+               margin-top: 20px;
+           }
+           .team-details.active {
+               display: block;
+           }
+           .team-header {
+               display: flex;
+               align-items: center;
+               margin-bottom: 10px;
+           }
+           .player-photo {
+               width: 50px;
+               height: 50px;
+               border-radius: 50%;
+               object-fit: cover;
+           }
+           table {
+               width: 100%;
+               border-collapse: collapse;
+           }
+           th, td {
+               border: 1px solid rgba(255, 255, 255, 0.2);
+               padding: 8px;
+               text-align: center;
+           }
+           th {
+               background-color: rgba(255, 255, 255, 0.2);
+           }
+           .back-button {
+               display: block;
+               margin: 10px auto;
+               padding: 10px 20px;
+               background-color: #ffcc00;
+               color: #000;
+               border: none;
+               border-radius: 5px;
+               cursor: pointer;
+           }
+       </style>
+   </head>
+   <body>
+       <h2>IPL Auction Team Results</h2>
+       <div id="team-selection" class="team-selection"></div>
+       <div id="team-details" class="team-details"></div>
+
+       <script src="/socket.io/socket.io.js"></script>
+       <script>
+           const socket = io();
+           let teams = {};
+           let selectedTeam = null;
+
+           // Function to render team selection cards
+           function renderTeamSelection() {
+               const container = document.getElementById('team-selection');
+               let html = '';
+               for (let team in teams) {
+                   html += `
+                       <div class="team-card" data-team="${team}">
+                           <img src="/logos/${team.toLowerCase()}.png" alt="${team} Logo" class="team-logo">
+                           <h3>${team}</h3>
+                       </div>
+                   `;
+               }
+               container.innerHTML = html;
+
+               // Add click handlers for team cards
+               document.querySelectorAll('.team-card').forEach(card => {
+                   card.addEventListener('click', () => {
+                       selectedTeam = card.dataset.team;
+                       renderTeamDetails();
+                   });
+               });
+           }
+
+           // Function to render selected team's details
+           function renderTeamDetails() {
+               if (!selectedTeam) return;
+               const container = document.getElementById('team-details');
+               const team = teams[selectedTeam];
+               let totalBids = 0;
+               const playersWithDetails = team.players.map((player, index) => {
+                   const bidInCrores = (team.bids[index] || 0) / 10000000;
+                   totalBids += bidInCrores;
+                   return `
+                       <tr>
+                           <td><img src="/images/${player.name.toUpperCase()}.png" alt="${player.name}" class="player-photo" onerror="this.src='/images/default.png'"></td>
+                           <td>${player.name}</td>
+                           <td>${player.category}</td>
+                           <td>${bidInCrores.toFixed(2)} Crores</td>
+                       </tr>
+                   `;
+               }).join('');
+
+               container.innerHTML = `
+                   <div class="team-header">
+                       <img src="/logos/${selectedTeam.toLowerCase()}.png" alt="${selectedTeam} Logo" class="team-logo">
+                       <h3>${selectedTeam}</h3>
+                   </div>
+                   <table>
+                       <thead>
+                           <tr>
+                               <th>Photo</th>
+                               <th>Player</th>
+                               <th>Category</th>
+                               <th>Bid Amount</th>
+                           </tr>
+                       </thead>
+                       <tbody>
+                           ${playersWithDetails || '<tr><td colspan="4">No players yet</td></tr>'}
+                       </tbody>
+                   </table>
+                   <p>Total Bids: ${totalBids.toFixed(2)} Crores</p>
+                   <button class="back-button">Back to Teams</button>
+               `;
+               container.classList.add('active');
+
+               // Add click handler for back button
+               document.querySelector('.back-button').addEventListener('click', () => {
+                   selectedTeam = null;
+                   container.classList.remove('active');
+                   container.innerHTML = '';
+               });
+           }
+
+           // Handle team updates from the server
+           socket.on('updateTeams', (updatedTeams) => {
+               teams = updatedTeams;
+               renderTeamSelection();
+               if (selectedTeam) {
+                   renderTeamDetails();
+               }
+           });
+       </script>
+   </body>
+   </html> -->
+
+
+
+
+
+   <!-- <!DOCTYPE html>
+   <html lang="en">
+   <head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>IPL Auction Teams</title>
+       <style>
+           body {
+               font-family: Arial, sans-serif;
+               margin: 0;
+               padding: 20px;
+               background: linear-gradient(135deg, #1e5799 0%, #2989d8 50%, #207cca 51%, #7db9e8 100%);
+               color: #fff;
+               min-height: 100vh;
+           }
+           h2 {
+               text-align: center;
+               color: #ffcc00;
+               text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+           }
+           .team-selection {
+               display: flex;
+               flex-wrap: wrap;
+               justify-content: center;
+               gap: 20px;
+           }
+           .team-card {
+               background-color: rgba(255, 255, 255, 0.1);
+               border-radius: 10px;
+               padding: 15px;
+               width: 120px;
+               text-align: center;
+               cursor: pointer;
+               transition: transform 0.2s;
+           }
+           .team-card:hover {
+               transform: scale(1.05);
+           }
+           .team-logo {
+               width: 80px;
+               height: 80px;
+               object-fit: scale-down;
+               border-radius: 28%;
+               background-color: #ffffff7f;
+               padding: 10px;
+           }
+       </style>
+   </head>
+   <body>
+       <h2>IPL Auction Team Selection</h2>
+       <div id="team-selection" class="team-selection"></div>
+
+       <script src="/socket.io/socket.io.js"></script>
+       <script>
+           const socket = io();
+           let teams = {};
+
+           // Render team selection cards
+           function renderTeamSelection() {
+               const container = document.getElementById('team-selection');
+               let html = '';
+               for (let team in teams) {
+                   html += `
+                       <a href="/team/${team}" target="_blank" class="team-card">
+                           <img src="/logos/${team.toLowerCase()}.png" alt="${team} Logo" class="team-logo">
+                           <h3>${team}</h3>
+                       </a>
+                   `;
+               }
+               container.innerHTML = html;
+           }
+
+           // Handle team updates
+           socket.on('updateTeams', (updatedTeams) => {
+               teams = updatedTeams;
+               renderTeamSelection();
+           });
+       </script>
+   </body>
+   </html> -->
+
+
+
+   <!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPL Auction Teams</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 50%, #207cca 51%, #7db9e8 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+        h2 {
+            text-align: center;
+            color: #ffcc00;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .team-selection {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .team-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            width: 120px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .team-card:hover {
+            transform: scale(1.05);
+        }
+        .team-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: scale-down;
+            border-radius: 28%;
+            background-color: #ffffff7f;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>IPL Auction Team Selection</h2>
+    <div id="team-selection" class="team-selection"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let teams = {};
+        let currentTeamTab = null; // Track the currently open team tab
+
+        // Render team selection cards
+        function renderTeamSelection() {
+            const container = document.getElementById('team-selection');
+            let html = '';
+            for (let team in teams) {
+                html += `
+                    <div class="team-card" data-team="${team}">
+                        <img src="/logos/${team.toLowerCase()}.png" alt="${team} Logo" class="team-logo">
+                        <h3>${team}</h3>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+
+            // Add click handlers for team cards
+            document.querySelectorAll('.team-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const team = card.dataset.team;
+                    // Close the previous tab if it exists and is not closed
+                    if (currentTeamTab && !currentTeamTab.closed) {
+                        currentTeamTab.close();
+                    }
+                    // Open new tab and store reference
+                    currentTeamTab = window.open(`/team/${team}`, '_blank');
+                });
+            });
+        }
+
+        // Handle team updates
+        socket.on('updateTeams', (updatedTeams) => {
+            teams = updatedTeams;
+            renderTeamSelection();
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPL Auction Teams</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 50%, #207cca 51%, #7db9e8 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+        h2, h3 {
+            text-align: center;
+            color: #ffcc00;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .team-selection {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .team-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            width: 120px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .team-card:hover {
+            transform: scale(1.05);
+        }
+        .team-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: scale-down;
+            border-radius: 28%;
+            background-color: #ffffff7f;
+            padding: 10px;
+        }
+        .plan-section {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        .player-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+        .player-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .target-list {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .target-item {
+            padding: 5px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #ffcc00;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e6b800;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #ffcc00;
+            color: #000;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+        }
+        .notification.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h2>IPL Auction Team Selection</h2>
+    <div id="team-selection" class="team-selection"></div>
+    <div class="plan-section">
+        <h3>Plan Your Bids</h3>
+        <div class="player-list" id="player-list"></div>
+        <h4>Your Target List</h4>
+        <div class="target-list" id="target-list"></div>
+    </div>
+    <div id="notification" class="notification"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let teams = {};
+        let players = [];
+        let targetList = [];
+        let currentTeamTab = null;
+
+        // Render team selection cards
+        function renderTeamSelection() {
+            const container = document.getElementById('team-selection');
+            let html = '';
+            for (let team in teams) {
+                html += `
+                    <div class="team-card" data-team="${team}">
+                        <img src="/logos/${team.toLowerCase()}.png" alt="${team} Logo" class="team-logo">
+                        <h3>${team}</h3>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+
+            document.querySelectorAll('.team-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const team = card.dataset.team;
+                    if (currentTeamTab && !currentTeamTab.closed) {
+                        currentTeamTab.close();
+                    }
+                    currentTeamTab = window.open(`/team/${team}`, '_blank');
+                });
+            });
+        }
+
+        // Render available players
+        function renderPlayerList() {
+            const container = document.getElementById('player-list');
+            let html = players.map(player => `
+                <div class="player-item">
+                    <span>${player.name} (${player.category})</span>
+                    <button onclick="addToTargetList('${player.name}')">Add</button>
+                </div>
+            `).join('');
+            container.innerHTML = html || '<p>No players available</p>';
+        }
+
+        // Render target list
+        function renderTargetList() {
+            const container = document.getElementById('target-list');
+            let html = targetList.map(player => `
+                <div class="target-item">
+                    ${player} <button onclick="removeFromTargetList('${player}')">Remove</button>
+                </div>
+            `).join('');
+            container.innerHTML = html || '<p>No players selected</p>';
+        }
+
+        // Add player to target list
+        function addToTargetList(playerName) {
+            if (!targetList.includes(playerName) && targetList.length < 10) { // Limit to 10 for UX
+                targetList.push(playerName);
+                socket.emit('updateTargetList', targetList);
+            }
+        }
+
+        // Remove player from target list
+        function removeFromTargetList(playerName) {
+            targetList = targetList.filter(p => p !== playerName);
+            socket.emit('updateTargetList', targetList);
+        }
+
+        // Handle team updates
+        socket.on('updateTeams', (updatedTeams) => {
+            teams = updatedTeams;
+            renderTeamSelection();
+        });
+
+        // Handle player list updates
+        socket.on('updatePlayers', (updatedPlayers) => {
+            players = updatedPlayers;
+            renderPlayerList();
+        });
+
+        // Handle target list updates
+        socket.on('updateTargetList', (updatedTargetList) => {
+            targetList = updatedTargetList;
+            renderTargetList();
+        });
+
+        // Handle player sold notification
+        socket.on('playerSoldNotification', (data) => {
+            const notification = document.getElementById('notification');
+            notification.textContent = `${data.player} sold to ${data.team} for ₹${(data.bid / 10000000).toFixed(2)} Crores!`;
+            notification.classList.add('show');
+            setTimeout(() => notification.classList.remove('show'), 5000);
+        });
+
+        renderTeamSelection();
+        renderPlayerList();
+        renderTargetList();
+    </script>
+</body>
+</html> -->
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPL Auction Teams</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 50%, #207cca 51%, #7db9e8 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+        h2, h3 {
+            text-align: center;
+            color: #ffcc00;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .team-selection {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .team-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            width: 120px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .team-card:hover {
+            transform: scale(1.05);
+        }
+        .team-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: scale-down;
+            border-radius: 28%;
+            background-color: #ffffff7f;
+            padding: 10px;
+        }
+        .plan-section {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        .search-box {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+        .search-box::placeholder {
+            color: #ccc;
+        }
+        .player-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+        .player-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .target-list {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .target-item {
+            padding: 5px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #ffcc00;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e6b800;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #ffcc00;
+            color: #000;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+        }
+        .notification.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h2>IPL Auction Team Selection</h2>
+    <div id="team-selection" class="team-selection"></div>
+    <div class="plan-section">
+        <h3>Plan Your Bids</h3>
+        <input type="text" class="search-box" id="player-search" placeholder="Search players...">
+        <div class="player-list" id="player-list"></div>
+        <h4>Your Target List</h4>
+        <div class="target-list" id="target-list"></div>
+    </div>
+    <div id="notification" class="notification"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let teams = {};
+        let players = [];
+        let targetList = [];
+        let currentTeamTab = null;
+        let filteredPlayers = [];
+
+        // Render team selection cards
+        function renderTeamSelection() {
+            const container = document.getElementById('team-selection');
+            let html = '';
+            for (let team in teams) {
+                html += `
+                    <div class="team-card" data-team="${team}">
+                        <img src="/logos/${team.toLowerCase()}.png" alt="${team} Logo" class="team-logo">
+                        <h3>${team}</h3>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+
+            document.querySelectorAll('.team-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const team = card.dataset.team;
+                    if (currentTeamTab && !currentTeamTab.closed) {
+                        currentTeamTab.close();
+                    }
+                    currentTeamTab = window.open(`/team/${team}`, '_blank');
+                });
+            });
+        }
+
+        // Render available players
+        function renderPlayerList() {
+            const container = document.getElementById('player-list');
+            let html = filteredPlayers.map(player => `
+                <div class="player-item">
+                    <span>${player.name} (${player.category})</span>
+                    <button onclick="addToTargetList('${player.name}')">Add</button>
+                </div>
+            `).join('');
+            container.innerHTML = html || '<p>No players match your search</p>';
+        }
+
+        // Render target list
+        function renderTargetList() {
+            const container = document.getElementById('target-list');
+            let html = targetList.map(player => `
+                <div class="target-item">
+                    ${player} <button onclick="removeFromTargetList('${player}')">Remove</button>
+                </div>
+            `).join('');
+            container.innerHTML = html || '<p>No players selected</p>';
+        }
+
+        // Add player to target list
+        function addToTargetList(playerName) {
+            if (!targetList.includes(playerName) && targetList.length < 10) {
+                targetList.push(playerName);
+                socket.emit('updateTargetList', targetList);
+            }
+        }
+
+        // Remove player from target list
+        function removeFromTargetList(playerName) {
+            targetList = targetList.filter(p => p !== playerName);
+            socket.emit('updateTargetList', targetList);
+        }
+
+        // Handle search input
+        function handleSearch() {
+            const query = document.getElementById('player-search').value.toLowerCase();
+            filteredPlayers = players.filter(player => 
+                player.name.toLowerCase().includes(query)
+            );
+            renderPlayerList();
+        }
+
+        // Handle team updates
+        socket.on('updateTeams', (updatedTeams) => {
+            teams = updatedTeams;
+            renderTeamSelection();
+        });
+
+        // Handle player list updates
+        socket.on('updatePlayers', (updatedPlayers) => {
+            players = updatedPlayers;
+            filteredPlayers = players; // Reset filtered list
+            renderPlayerList();
+        });
+
+        // Handle target list updates
+        socket.on('updateTargetList', (updatedTargetList) => {
+            targetList = updatedTargetList;
+            renderTargetList();
+        });
+
+        // Handle player sold notification
+        socket.on('playerSoldNotification', (data) => {
+            const notification = document.getElementById('notification');
+            notification.textContent = `${data.player} sold to ${data.team} for ₹${(data.bid / 10000000).toFixed(2)} Crores!`;
+            notification.classList.add('show');
+            setTimeout(() => notification.classList.remove('show'), 5000);
+        });
+
+        // Initialize
+        renderTeamSelection();
+        renderPlayerList();
+        renderTargetList();
+
+        // Add search event listener
+        document.getElementById('player-search').addEventListener('input', handleSearch);
+    </script>
+</body>
+</html> -->
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPL Auction Teams</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 50%, #207cca 51%, #7db9e8 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+        h2, h3 {
+            text-align: center;
+            color: #ffcc00;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .team-selection {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .team-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            width: 120px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .team-card:hover {
+            transform: scale(1.05);
+        }
+        .team-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: scale-down;
+            border-radius: 28%;
+            background-color: #ffffff7f;
+            padding: 10px;
+        }
+        .plan-section {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        .search-box {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+        .search-box::placeholder {
+            color: #ccc;
+        }
+        .player-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+        .player-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .target-list {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .target-item {
+            padding: 5px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #ffcc00;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e6b800;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #ffcc00;
+            color: #000;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+        }
+        .notification.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h2>IPL Auction Team Selection</h2>
+    <div id="team-selection" class="team-selection"></div>
+    <div class="plan-section">
+        <h3>Plan Your Bids</h3>
+        <input type="text" class="search-box" id="player-search" placeholder="Search players...">
+        <div class="player-list" id="player-list"></div>
+        <h4>Your Target List</h4>
+        <div class="target-list" id="target-list"></div>
+    </div>
+    <div id="notification" class="notification"></div>
+    <audio id="notification-sound" src="/sounds/notification.mp3"></audio>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let teams = {};
+        let players = [];
+        let targetList = [];
+        let currentTeamTab = null;
+        let filteredPlayers = [];
+
+        // Request notification permission
+        if (Notification.permission !== 'granted') {
+            Notification.requestPermission();
+        }
+
+        // Render team selection cards
+        function renderTeamSelection() {
+            const container = document.getElementById('team-selection');
+            let html = '';
+            for (let team in teams) {
+                html += `
+                    <div class="team-card" data-team="${team}">
+                        <img src="/logos/${team.toLowerCase()}.png" alt="${team} Logo" class="team-logo">
+                        <h3>${team}</h3>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+
+            document.querySelectorAll('.team-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const team = card.dataset.team;
+                    if (currentTeamTab && !currentTeamTab.closed) {
+                        currentTeamTab.close();
+                    }
+                    currentTeamTab = window.open(`/team/${team}`, '_blank');
+                });
+            });
+        }
+
+        // Render available players
+        function renderPlayerList() {
+            const container = document.getElementById('player-list');
+            let html = filteredPlayers.map(player => `
+                <div class="player-item">
+                    <span>${player.name} (${player.category})</span>
+                    <button onclick="addToTargetList('${player.name}')">Add</button>
+                </div>
+            `).join('');
+            container.innerHTML = html || '<p>No players match your search</p>';
+        }
+
+        // Render target list
+        function renderTargetList() {
+            const container = document.getElementById('target-list');
+            let html = targetList.map(player => `
+                <div class="target-item">
+                    ${player} <button onclick="removeFromTargetList('${player}')">Remove</button>
+                </div>
+            `).join('');
+            container.innerHTML = html || '<p>No players selected</p>';
+        }
+
+        // Add player to target list
+        function addToTargetList(playerName) {
+            if (!targetList.includes(playerName) && targetList.length < 10) {
+                targetList.push(playerName);
+                socket.emit('updateTargetList', targetList);
+            }
+        }
+
+        // Remove player from target list
+        function removeFromTargetList(playerName) {
+            targetList = targetList.filter(p => p !== playerName);
+            socket.emit('updateTargetList', targetList);
+        }
+
+        // Handle search input
+        function handleSearch() {
+            const query = document.getElementById('player-search').value.toLowerCase();
+            filteredPlayers = players.filter(player => 
+                player.name.toLowerCase().includes(query)
+            );
+            renderPlayerList();
+        }
+
+        // Show notification with sound
+        function showNotification(message, isWebNotification = false) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            setTimeout(() => notification.classList.remove('show'), 5000);
+
+            // Play sound
+            const sound = document.getElementById('notification-sound');
+            sound.play().catch(err => console.log('Sound play error:', err));
+
+            // Web Notification
+            if (isWebNotification && Notification.permission === 'granted') {
+                new Notification(message);
+            }
+        }
+
+        // Handle team updates
+        socket.on('updateTeams', (updatedTeams) => {
+            teams = updatedTeams;
+            renderTeamSelection();
+        });
+
+        // Handle player list updates
+        socket.on('updatePlayers', (updatedPlayers) => {
+            players = updatedPlayers;
+            filteredPlayers = players;
+            renderPlayerList();
+        });
+
+        // Handle target list updates
+        socket.on('updateTargetList', (updatedTargetList) => {
+            targetList = updatedTargetList;
+            renderTargetList();
+        });
+
+        // Handle player up for bid notification
+        socket.on('playerBidNotification', (data) => {
+            showNotification(`${data.player} is now up for bidding!`, true);
+        });
+
+        // Handle player sold notification
+        socket.on('playerSoldNotification', (data) => {
+            showNotification(`${data.player} sold to ${data.team} for ₹${(data.bid / 10000000).toFixed(2)} Crores!`, true);
+        });
+
+        // Initialize
+        renderTeamSelection();
+        renderPlayerList();
+        renderTargetList();
+        document.getElementById('player-search').addEventListener('input', handleSearch);
+    </script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPL Auction Teams</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 50%, #207cca 51%, #7db9e8 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+        h2, h3 {
+            text-align: center;
+            color: #ffcc00;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .team-selection {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .team-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            width: 120px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .team-card:hover {
+            transform: scale(1.05);
+        }
+        .team-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: scale-down;
+            border-radius: 28%;
+            background-color: #ffffff7f;
+            padding: 10px;
+        }
+        .plan-section {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        .search-box {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+        .search-box::placeholder {
+            color: #ccc;
+        }
+        .player-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+        .player-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .target-list {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .target-item {
+            padding: 5px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #ffcc00;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e6b800;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #ffcc00;
+            color: #000;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+        }
+        .notification.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h2>IPL Auction Team Selection</h2>
+    <div id="team-selection" class="team-selection"></div>
+    <div class="plan-section">
+        <h3>Plan Your Bids</h3>
+        <input type="text" class="search-box" id="player-search" placeholder="Search players...">
+        <div class="player-list" id="player-list"></div>
+        <h4>Your Target List</h4>
+        <div class="target-list" id="target-list"></div>
+    </div>
+    <div id="notification" class="notification"></div>
+    <audio id="notification-sound" src="/sounds/notification.mp3"></audio>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let teams = {};
+        let players = [];
+        let targetList = [];
+        let currentTeamTab = null;
+        let filteredPlayers = [];
+        
+        window.onload = function () {
+            const matchId = "2025-final"; // Replace with dynamic session ID if available
+            const targetKey = `targetList_${matchId}`;
+            
+            const saved = localStorage.getItem(targetKey);
+            if (saved) {
+                targetList = JSON.parse(saved);
+                renderTargetList(); // Make sure this function populates the UI
+            }
+    };
+        // Request notification permission
+        if (Notification.permission !== 'granted') {
+            Notification.requestPermission().then(permission => {
+                console.log('Notification permission:', permission);
+            });
+        }
+
+        // Render team selection cards
+        function renderTeamSelection() {
+            const container = document.getElementById('team-selection');
+            let html = '';
+            for (let team in teams) {
+                html += `
+                    <div class="team-card" data-team="${team}">
+                        <img src="/logos/${team.toLowerCase()}.png" alt="${team} Logo" class="team-logo">
+                        <h3>${team}</h3>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+
+            document.querySelectorAll('.team-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const team = card.dataset.team;
+                    if (currentTeamTab && !currentTeamTab.closed) {
+                        currentTeamTab.close();
+                    }
+                    currentTeamTab = window.open(`/team/${team}`, '_blank');
+                });
+            });
+        }
+
+        // Render available players
+        function renderPlayerList() {
+            const container = document.getElementById('player-list');
+            let html = filteredPlayers.map(player => `
+                <div class="player-item">
+                    <span>${player.name} (${player.category})</span>
+                    <button onclick="addToTargetList('${player.name}')">Add</button>
+                </div>
+            `).join('');
+            container.innerHTML = html || '<p>No players match your search</p>';
+        }
+
+        // Render target list
+        function renderTargetList() {
+            const container = document.getElementById('target-list');
+            let html = targetList.map(player => `
+                <div class="target-item">
+                    ${player} <button onclick="removeFromTargetList('${player}')">Remove</button>
+                </div>
+            `).join('');
+            container.innerHTML = html || '<p>No players selected</p>';
+        }
+        // // Load targetList from localStorage if available
+        // const matchId = "2025-final"; // Change this dynamically per game
+        // const targetKey = `targetList_${matchId}`;
+
+        const matchId = "2025-final"; 
+        let userId = localStorage.getItem("userId");
+
+        if (!userId) {
+            userId = prompt("Enter your player name or ID:");
+            localStorage.setItem("userId", userId);
+        }
+
+        const targetKey = `targetList_${matchId}_${userId}`;
+
+        const savedList = localStorage.getItem(targetKey);
+        if (savedList) {
+            targetList = JSON.parse(savedList);
+            renderTargetList();
+        }
+
+        // Add player to target list
+        // function addToTargetList(playerName) {
+        //     if (!targetList.includes(playerName) && targetList.length < 10) {
+        //         targetList.push(playerName);
+        //         socket.emit('updateTargetList', targetList);
+        //     }
+        // }
+        // Add player to target list
+        function addToTargetList(playerName) {
+            if (!targetList.includes(playerName) && targetList.length < 10) {
+                targetList.push(playerName);
+                // localStorage.setItem('targetList_${matchId}', JSON.stringify(targetList));
+                localStorage.setItem(`targetList_${matchId}`, JSON.stringify(targetList));
+                socket.emit('updateTargetList', targetList);
+                renderTargetList();
+            }
+        }
+
+        // // Remove player from target list
+        // function removeFromTargetList(playerName) {
+        //     targetList = targetList.filter(p => p !== playerName);
+        //     socket.emit('updateTargetList', targetList);
+        // }
+        // Remove player from target list
+        function removeFromTargetList(playerName) {
+            targetList = targetList.filter(p => p !== playerName);
+            // localStorage.setItem('targetList_${matchId}', JSON.stringify(targetList));
+            localStorage.setItem(`targetList_${matchId}`, JSON.stringify(targetList));
+            socket.emit('updateTargetList', targetList);
+            renderTargetList();
+        }
+
+        // Handle search input
+        function handleSearch() {
+            const query = document.getElementById('player-search').value.toLowerCase();
+            filteredPlayers = players.filter(player => 
+                player.name.toLowerCase().includes(query)
+            );
+            renderPlayerList();
+        }
+
+        // Show notification with sound
+        function showNotification(message, isWebNotification = false) {
+            console.log('Showing notification:', message);
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            setTimeout(() => notification.classList.remove('show'), 5000);
+
+            // Play sound
+            const sound = document.getElementById('notification-sound');
+            sound.play().catch(err => console.error('Sound play error:', err));
+
+            // Web Notification
+            if (isWebNotification && Notification.permission === 'granted') {
+                new Notification(message, {
+                    icon: '/logos/icon.png' // Optional
+                });
+            }
+        }
+
+        // Handle team updates
+        socket.on('updateTeams', (updatedTeams) => {
+            teams = updatedTeams;
+            renderTeamSelection();
+        });
+
+        // Handle player list updates
+        socket.on('updatePlayers', (updatedPlayers) => {
+            players = updatedPlayers;
+            filteredPlayers = players;
+            renderPlayerList();
+        });
+
+        // // Handle target list updates
+        // socket.on('updateTargetList', (updatedTargetList) => {
+        //     targetList = updatedTargetList;
+        //     renderTargetList();
+        // });
+        socket.on('updateTargetList', (updatedTargetList) => {
+            const savedList = JSON.parse(localStorage.getItem(targetKey));
+            // Only overwrite if savedList doesn't exist or is empty
+            if (!savedList || savedList.length === 0) {
+                targetList = updatedTargetList;
+                localStorage.setItem(targetKey, JSON.stringify(targetList));
+                renderTargetList();
+            }
+        });
+
+
+        // Handle player up for bid notification
+        socket.on('playerBidNotification', (data) => {
+            showNotification(`${data.player} is now up for bidding!`, true);
+        });
+
+        // Handle player sold notification
+        socket.on('playerSoldNotification', (data) => {
+            showNotification(`${data.player} sold to ${data.team} for ₹${(data.bid / 10000000).toFixed(2)} Crores!`, true);
+        });
+
+        // Initialize
+        renderTeamSelection();
+        renderPlayerList();
+        renderTargetList();
+        document.getElementById('player-search').addEventListener('input', handleSearch);
+    </script>
+</body>
+</html>

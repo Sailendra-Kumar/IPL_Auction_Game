@@ -1,0 +1,254 @@
+<!-- <!DOCTYPE html>
+   <html lang="en">
+   <head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>IPL Auction Team Details</title>
+       <style>
+           body {
+               font-family: Arial, sans-serif;
+               margin: 0;
+               padding: 20px;
+               background: linear-gradient(135deg, #1e5799 0%, #2989d8 50%, #207cca 51%, #7db9e8 100%);
+               color: #fff;
+               min-height: 100vh;
+           }
+           h2 {
+               text-align: center;
+               color: #ffcc00;
+               text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+           }
+           .team-details {
+               background-color: rgba(255, 255, 255, 0.1);
+               border-radius: 10px;
+               padding: 15px;
+           }
+           .team-header {
+               display: flex;
+               align-items: center;
+               margin-bottom: 10px;
+           }
+           .team-logo {
+               width: 60px;
+               height: 60px;
+               object-fit: scale-down;
+               border-radius: 28%;
+               background-color: #ffffff7f;
+               padding: 10px;
+               margin-right: 15px;
+           }
+           .player-photo {
+               width: 50px;
+               height: 50px;
+               border-radius: 50%;
+               object-fit: cover;
+           }
+           table {
+               width: 100%;
+               border-collapse: collapse;
+           }
+           th, td {
+               border: 1px solid rgba(255, 255, 255, 0.2);
+               padding: 8px;
+               text-align: center;
+           }
+           th {
+               background-color: rgba(255, 255, 255, 0.2);
+           }
+       </style>
+   </head>
+   <body>
+       <h2>IPL Auction Team Details</h2>
+       <div id="team-details" class="team-details"></div>
+
+       <script src="/socket.io/socket.io.js"></script>
+       <script>
+           const socket = io();
+           const teamName = window.location.pathname.split('/').pop();
+           let teams = {};
+
+           // Render team details
+           function renderTeamDetails() {
+               if (!teams[teamName]) return;
+               const container = document.getElementById('team-details');
+               const team = teams[teamName];
+               let totalBids = 0;
+               const playersWithDetails = team.players.map((player, index) => {
+                   const bidInCrores = (team.bids[index] || 0) / 10000000;
+                   totalBids += bidInCrores;
+                   return `
+                       <tr>
+                           <td><img src="/images/${player.name.toUpperCase()}.png" alt="${player.name}" class="player-photo" onerror="this.src='/images/default.png'"></td>
+                           <td>${player.name}</td>
+                           <td>${player.category}</td>
+                           <td>${bidInCrores.toFixed(2)} Crores</td>
+                       </tr>
+                   `;
+               }).join('');
+
+               container.innerHTML = `
+                   <div class="team-header">
+                       <img src="/logos/${teamName.toLowerCase()}.png" alt="${teamName} Logo" class="team-logo">
+                       <h3>${teamName}</h3>
+                   </div>
+                   <table>
+                       <thead>
+                           <tr>
+                               <th>Photo</th>
+                               <th>Player</th>
+                               <th>Category</th>
+                               <th>Bid Amount</th>
+                           </tr>
+                       </thead>
+                       <tbody>
+                           ${playersWithDetails || '<tr><td colspan="4">No players yet</td></tr>'}
+                       </tbody>
+                   </table>
+                   <p>Total Bids: ${totalBids.toFixed(2)} Crores</p>
+               `;
+           }
+
+           // Handle team updates
+           socket.on('updateTeams', (updatedTeams) => {
+               teams = updatedTeams;
+               renderTeamDetails();
+           });
+       </script>
+   </body>
+   </html> -->
+
+
+   <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPL Auction Team Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 50%, #207cca 51%, #7db9e8 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+        h2 {
+            text-align: center;
+            color: #ffcc00;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .team-details {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        .team-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .team-logo {
+            width: 60px;
+            height: 60px;
+            object-fit: scale-down;
+            border-radius: 28%;
+            background-color: #ffffff7f;
+            padding: 10px;
+            margin-right: 15px;
+        }
+        .player-photo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .back-button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            background-color: #ffcc00;
+            color: #000;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .back-button:hover {
+            background-color: #e6b800;
+        }
+    </style>
+</head>
+<body>
+    <h2>IPL Auction Team Details</h2>
+    <div id="team-details" class="team-details"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const teamName = window.location.pathname.split('/').pop();
+        let teams = {};
+        
+        // Render team details
+        function renderTeamDetails() {
+            if (!teams[teamName]) return;
+            const container = document.getElementById('team-details');
+            const team = teams[teamName];
+            let totalBids = 0;
+            const playersWithDetails = team.players.map((player, index) => {
+                const bidInCrores = (team.bids[index] || 0) / 10000000;
+                totalBids += bidInCrores;
+                return `
+                    <tr>
+                        <td><img src="/images/${player.name.toUpperCase()}.png" alt="${player.name}" class="player-photo" onerror="this.src='/images/default.png'"></td>
+                        <td>${player.name}</td>
+                        <td>${player.category}</td>
+                        <td>${bidInCrores.toFixed(2)} Crores</td>
+                    </tr>
+                `;
+            }).join('');
+            const balance = 120 - totalBids; // 12 Crores = 120000000
+            container.innerHTML = `
+                <div class="team-header">
+                    <img src="/logos/${teamName.toLowerCase()}.png" alt="${teamName} Logo" class="team-logo">
+                    <h3>${teamName} <span style="font-size: 0.9em; font-weight: normal;">(Balance: ₹${balance.toFixed(2)} Cr)</span></h3>
+                    
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Photo</th>
+                            <th>Player</th>
+                            <th>Category</th>
+                            <th>Bid Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${playersWithDetails || '<tr><td colspan="4">No players yet</td></tr>'}
+                    </tbody>
+                </table>
+                <p>Total Bids: ${totalBids.toFixed(2)} Crores</p>
+                <a href="/" class="back-button">Back to Teams</a>
+            `;
+        }
+
+        // Handle team updates
+        socket.on('updateTeams', (updatedTeams) => {
+            teams = updatedTeams;
+            renderTeamDetails();
+        });
+    </script>
+</body>
+</html>
