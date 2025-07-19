@@ -72,9 +72,6 @@ Then update the Socket.IO connection in `script.js` to use the ngrok public URL.
 - All sensitive API keys and IP addresses have been replaced with dummy placeholders.
 - Due to copyright restrictions from [https://www.iplt20.com](https://www.iplt20.com), this version includes **tweaked names and placeholder images** instead of original IPL player assets.
 
-## 📸 Screenshots
-
-
 ## 🧑‍💻 Author
 
 **Sailendra Kumar Parsa**  
